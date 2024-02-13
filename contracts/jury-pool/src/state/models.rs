@@ -1,8 +1,7 @@
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Timestamp};
 use cw_utils::Duration;
-
-use super::token::TokenAmount;
+use gelotto_core::models::token::TokenAmount;
 
 #[cw_serde]
 pub struct Config {}

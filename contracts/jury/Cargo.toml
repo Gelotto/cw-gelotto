@@ -27,6 +27,7 @@ cosmwasm-std = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true } 
+gelotto-core = { workspace = true }
 
 [dev-dependencies]
 cw-multi-test = { workspace = true }

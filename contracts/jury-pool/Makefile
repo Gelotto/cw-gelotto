@@ -11,10 +11,6 @@ build:
 deploy:
 	./bin/deploy ./artifacts/$(wasm_filename) $(network) $(sender) $(tag)
 
-# instantiate last contract to be deployed using code ID in release dir code-id file
-instantiate:
-	./bin/instantiate $(network) $(sender) $(tag)
-
 # run all unit tests
 test:
 	RUST_BACKTRACE=1 cargo unit-test
@@ -26,9 +22,3 @@ schemas:
 # Run/start local "devnet" validator docker image	
 devnet:
 	./bin/devnet
-
-transfer-ownership:
-	./client.sh transfer-ownership $(network) $(tag) $(sender)
-
-select:
-	./client.sh query-select $(network) $(tag)

@@ -59,12 +59,8 @@ rm -rf contracts/**/schema/raw
 [tasks.publish]
 script = """
 crates=(
-  cw721
-  cw721-base
-  cw721-fixed-price
-  cw721-metadata-onchain
-  cw721-non-transferable
-  cw2981-royalties
+    cw-jury-pool
+    cw-jury
 )
 
 for crate in $crates; do

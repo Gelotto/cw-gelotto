@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    #"packages/*", 
+    "packages/*", 
     "contracts/*"
 ]
 
@@ -10,8 +10,8 @@ version         = "0.1.0"
 edition         = "2021"
 license         = "Apache-2.0"
 repository      = "https://github.com/Gelotto/jury"
-homepage        = "https://gelotto.io"
 documentation   = "https://github.com/Gelotto/jury"
+homepage        = "https://gelotto.io"
 
 [workspace.dependencies]
 cw-utils        = { version = "1.0.3" }
@@ -24,7 +24,11 @@ schemars        = { version = "0.8.16" }
 serde           = { version = "1.0.196", default-features = false, features = ["derive"] }
 thiserror       = { version = "1.0.56" }
 cw-multi-test   = { version = "0.20.0" }
+gelotto-core    = { version = "*", path = "packages/core" }
 
+[profile.release.package.core]
+codegen-units = 1
+incremental   = false
 
 [profile.release]
 incremental         = false
