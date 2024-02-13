@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+members = [
+    #"packages/*", 
+    "contracts/*"
+]
+
+[workspace.package]
+version         = "0.1.0"
+edition         = "2021"
+license         = "Apache-2.0"
+repository      = "https://github.com/Gelotto/jury"
+homepage        = "https://gelotto.io"
+documentation   = "https://github.com/Gelotto/jury"
+
+[workspace.dependencies]
+cw-utils        = { version = "1.0.3" }
+cw2             = { version = "1.1.2" }
+cw20            = { version = "1.1.2" }
+cw-storage-plus = { version = "1.2.0" }
+cosmwasm-schema = { version = "1.5.2" }
+cosmwasm-std    = { version = "1.5.2" }
+schemars        = { version = "0.8.16" }
+serde           = { version = "1.0.196", default-features = false, features = ["derive"] }
+thiserror       = { version = "1.0.56" }
+cw-multi-test   = { version = "0.20.0" }
+
+
+[profile.release]
+incremental         = false
+codegen-units       = 1
+rpath = false
+lto                 = true
+overflow-checks     = true
+opt-level           = 3
+debug               = false
+debug-assertions    = false
