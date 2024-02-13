@@ -14,17 +14,18 @@ documentation   = "https://github.com/Gelotto/jury"
 homepage        = "https://gelotto.io"
 
 [workspace.dependencies]
-cw-utils        = { version = "1.0.3" }
-cw2             = { version = "1.1.2" }
-cw20            = { version = "1.1.2" }
-cw-storage-plus = { version = "1.2.0" }
-cosmwasm-schema = { version = "1.5.2" }
-cosmwasm-std    = { version = "1.5.2" }
-schemars        = { version = "0.8.16" }
-serde           = { version = "1.0.196", default-features = false, features = ["derive"] }
-thiserror       = { version = "1.0.56" }
-cw-multi-test   = { version = "0.20.0" }
-gelotto-core    = { version = "*", path = "packages/core" }
+cw-utils            = { version = "1.0.3" }
+cw2                 = { version = "1.1.2" }
+cw20                = { version = "1.1.2" }
+cw-storage-plus     = { version = "1.2.0" }
+cosmwasm-schema     = { version = "1.5.2" }
+cosmwasm-std        = { version = "1.5.2" }
+schemars            = { version = "0.8.16" }
+serde               = { version = "1.0.196", default-features = false, features = ["derive"] }
+thiserror           = { version = "1.0.56" }
+cw-multi-test       = { version = "0.20.0" }
+gelotto-core        = { version = "*", path = "packages/core" }
+gelotto-jury-lib    = { version = "*", path = "packages/jury" }
 
 [profile.release.package.core]
 codegen-units = 1

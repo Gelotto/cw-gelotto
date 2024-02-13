@@ -7,7 +7,7 @@ use cosmwasm_std::{entry_point, to_json_binary};
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response};
 use cw2::set_contract_version;
 
-const CONTRACT_NAME: &str = "crates.io:cw-contract-template";
+const CONTRACT_NAME: &str = "crates.io:cw-jury";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[entry_point]
@@ -35,11 +35,7 @@ pub fn execute(
 }
 
 #[entry_point]
-pub fn query(
-    deps: Deps,
-    env: Env,
-    msg: QueryMsg,
-) -> Result<Binary, ContractError> {
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     let ctx = ReadonlyContext { deps, env };
     let result = match msg {
         QueryMsg::Config {} => to_json_binary(&query_config(ctx)?),
@@ -48,11 +44,7 @@ pub fn query(
 }
 
 #[entry_point]
-pub fn migrate(
-    deps: DepsMut,
-    _env: Env,
-    _msg: MigrateMsg,
-) -> Result<Response, ContractError> {
+pub fn migrate(deps: DepsMut, _env: Env, _msg: MigrateMsg) -> Result<Response, ContractError> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     Ok(Response::default())
 }
