@@ -1,0 +1,27 @@
+[package]
+name            = "gelotto-core"
+description     = "Definition and types for the juries in jury protocol"
+authors         = ["Daniel Gabriele <d.gabri3le@users.noreply.github.com>"]
+version         = { workspace = true }
+edition         = { workspace = true }
+license         = { workspace = true }
+repository      = { workspace = true }
+homepage        = { workspace = true }
+documentation   = { workspace = true }
+
+exclude = [
+  "hash.txt",
+]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+backtraces = ["cosmwasm-std/backtraces"]
+
+[dependencies]
+cosmwasm-schema = { workspace = true }
+cosmwasm-std    = { workspace = true }
+cw-utils        = { workspace = true }
+schemars        = { workspace = true }
+serde           = { workspace = true }
