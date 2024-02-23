@@ -1,5 +1,5 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Addr, Uint128};
+use cosmwasm_std::{Addr, Coin, Uint128};
 
 #[cw_serde]
 pub enum Token {
@@ -36,4 +36,11 @@ impl Token {
             None
         }
     }
+}
+
+pub fn has_in_funds(funds: &Vec<Coin>, denom: &String, amount: Option<Uint128>) -> bool {
+    funds
+        .iter()
+        .find(|c| c.denom == *denom && (amount.and_then(|n| Some(n == c.amount)).unwrap_or(true)))
+        .is_some()
 }

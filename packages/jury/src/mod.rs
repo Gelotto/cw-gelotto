@@ -1,2 +1,2 @@
-pub mod owner;
-pub mod token;
+pub mod models;
+pub mod msg;

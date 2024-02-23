@@ -9,8 +9,8 @@ members = [
 version         = "0.1.0"
 edition         = "2021"
 license         = "Apache-2.0"
-repository      = "https://github.com/Gelotto/jury"
-documentation   = "https://github.com/Gelotto/jury"
+repository      = "https://github.com/Gelotto"
+documentation   = "https://github.com/Gelotto"
 homepage        = "https://gelotto.io"
 
 [workspace.dependencies]
@@ -24,10 +24,13 @@ schemars            = { version = "0.8.16" }
 serde               = { version = "1.0.196", default-features = false, features = ["derive"] }
 thiserror           = { version = "1.0.56" }
 cw-multi-test       = { version = "0.20.0" }
+# Dependences from workspace:
 gelotto-core        = { version = "*", path = "packages/core" }
 gelotto-jury-lib    = { version = "*", path = "packages/jury" }
+cw-table            = { version = "*", path = "contracts/table", features = ["library"] }
+cw-acl              = { version = "*", path = "contracts/acl", features = ["library"] }
 
-[profile.release.package.core]
+[profile.release.package.gelotto-core]
 codegen-units = 1
 incremental   = false
 

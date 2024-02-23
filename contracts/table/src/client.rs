@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Addr, Binary, StdResult, Uint64, WasmMsg};
+use cosmwasm_std::{to_json_binary, Addr, Binary, Coin, StdResult, Uint64, WasmMsg};
 
 use crate::{
     msg::{
@@ -35,6 +35,7 @@ impl Table {
         admin: Option<Addr>,
         groups: Option<Vec<GroupID>>,
         tags: Option<Vec<String>>,
+        funds: &Vec<Coin>,
     ) -> StdResult<WasmMsg> {
         Ok(WasmMsg::Execute {
             contract_addr: self.table_addr.clone().into(),
@@ -49,7 +50,7 @@ impl Table {
                 groups,
                 tags,
             })))?,
-            funds: vec![],
+            funds: funds.clone(),
         })
     }
 

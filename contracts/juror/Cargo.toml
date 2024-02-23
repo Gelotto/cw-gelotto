@@ -1,6 +1,6 @@
 [package]
-name = "cw-jury-pool"
-description = "Jury Pool Smart Contract"
+name = "cw-juror"
+description = "Juror Smart Contract"
 authors = ["Daniel Gabriele <d.gabri3le@users.noreply.github.com>"]
 version = { workspace = true }
 edition = { workspace = true }
@@ -26,7 +26,7 @@ cosmwasm-schema = { workspace = true }
 cosmwasm-std = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
-thiserror = { workspace = true }
+thiserror = { workspace = true } 
 gelotto-core = { workspace = true }
 gelotto-jury-lib = { workspace = true }
 cw-table = { workspace = true }

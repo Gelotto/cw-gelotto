@@ -7,8 +7,10 @@ use gelotto_core::models::token::TokenAmount;
 /// jury be formed around the given charges (tasks).
 #[cw_serde]
 pub struct JuryRequest {
-    pub settings: JuryParams,
-    pub charges: Vec<Charge>,
+    pub title: Option<String>,
+    pub tags: Option<Vec<String>>,
+    pub settings: JurySettings,
+    pub task: JuryTask,
     pub jurors: JurorConfig,
 }
 
@@ -17,11 +19,13 @@ pub struct JurorConfig {
     /// Minimum scores necessary for incentive participation
     pub qualifications: JurorQualifications,
     /// Minimum bonding token amounts and/or NFTs
-    pub bond: Vec<Bond>,
+    pub bond_requirements: Vec<Bond>,
 }
 
 #[cw_serde]
 pub struct JurorQualifications {
+    /// Total number of juries participated in
+    pub exp: Option<u32>,
     /// Score for personal identity verification level
     pub identity: Option<u8>,
     /// Score for how often juror proposes correct work
@@ -37,7 +41,7 @@ pub struct JurorQualifications {
 }
 
 #[cw_serde]
-pub struct JuryParams {
+pub struct JurySettings {
     /// When voting opens to the jury pool
     pub starts_at: Timestamp,
     /// Ideal timeframe for jury to come to its verdict
@@ -53,14 +57,9 @@ pub struct JuryParams {
 }
 
 #[cw_serde]
-pub enum Charge {
-    MultipleChoice {
-        prompt: String,
-        answers: Vec<Answer>,
-    },
-    FreeResponse {
-        prompt: String,
-    },
+pub struct JuryTask {
+    pub prompt: String,
+    pub answers: Vec<Answer>,
 }
 
 #[cw_serde]
@@ -76,10 +75,24 @@ pub struct DomainExpertise {
 }
 
 #[cw_serde]
+pub struct Verdict {
+    pub answer_id: String,
+    pub created_at: Timestamp,
+}
+
+#[cw_serde]
 pub enum Bond {
     Token(TokenAmount),
-    Nft {
-        collection_addr: Addr,
-        token_ids: Option<Vec<String>>,
-    },
+    Nft { cw721_addr: Addr },
+}
+
+impl Bond {
+    pub fn get_key(&self) -> String {
+        match self {
+            Bond::Nft { cw721_addr } => cw721_addr.to_string(),
+            Bond::Token(TokenAmount { token, amount }) => {
+                format!("{}:{}", token.to_key(), amount.u128())
+            }
+        }
+    }
 }
