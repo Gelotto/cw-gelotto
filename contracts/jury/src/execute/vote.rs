@@ -2,17 +2,18 @@ use crate::{
     error::ContractError,
     msg::JurorVoteMsg,
     state::{
-        models::JurorVoteMetadata,
+        models::{JurorVoteMetadata, VotingPeriod},
         storage::{
-            JUROR_BONDS, JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JUROR_VOTES,
-            JUROR_VOTE_METADATA, JUROR_VOTE_PROPOSERS, JUROR_VOTE_RATIONALES, JUROR_VOTE_TOTALS,
-            JURY_MAX_DURATION, JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_VOTING_STARTS_AT,
+            JUROR_BONDS, JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JUROR_SPEED_SCORES,
+            JUROR_VOTES, JUROR_VOTE_METADATA, JUROR_VOTE_PROPOSERS, JUROR_VOTE_RATIONALES,
+            JUROR_VOTE_TOTALS, JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_VOTING_PERIOD,
             TOTAL_QUALIFIED_VOTE_COUNT, TOTAL_UNQUALIFIED_VOTE_COUNT, VERDICT,
         },
     },
 };
 use cosmwasm_std::{
     attr, to_json_binary, Addr, Attribute, BlockInfo, Empty, QuerierWrapper, Response, Storage,
+    Timestamp, Uint128,
 };
 use cw_utils::Duration;
 use gelotto_jury_lib::{models::Verdict, query::JurorQueryMsg};
@@ -33,35 +34,25 @@ pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractEr
 
     if VERDICT.exists(deps.storage) {
         return Err(ContractError::NotAuthorized {
-            reason: "Existing verdict is immutable".to_string(),
+            reason: "Verdict cannot be changed".to_string(),
         });
     }
 
+    let vp: VotingPeriod = JURY_VOTING_PERIOD.load(deps.storage)?;
+
     // Ensure jury has started
-    let starts_at = JURY_VOTING_STARTS_AT.load(deps.storage)?;
-    if time < starts_at {
+
+    if time < vp.start {
         return Err(ContractError::NotAuthorized {
-            reason: "Voting not open".to_string(),
+            reason: "Voting period not started".to_string(),
         });
     }
 
     // Ensure voting period hasn't ended
-    let max_duration = JURY_MAX_DURATION.load(deps.storage)?;
-    match max_duration {
-        Duration::Height(max_height) => {
-            if height >= max_height {
-                return Err(ContractError::NotAuthorized {
-                    reason: "Voting closed".to_string(),
-                });
-            }
-        }
-        Duration::Time(seconds) => {
-            if time >= starts_at.plus_seconds(seconds) {
-                return Err(ContractError::NotAuthorized {
-                    reason: "Voting closed".to_string(),
-                });
-            }
-        }
+    if time >= vp.stop {
+        return Err(ContractError::NotAuthorized {
+            reason: "Voting closed".to_string(),
+        });
     }
 
     // Determine if juror qualified for official inclusion in verdict decision
@@ -147,6 +138,10 @@ pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractEr
         JUROR_VOTE_RATIONALES.save(deps.storage, &info.sender, &rationale)?;
     }
 
+    // Update the juror's "response speed" score
+    let speed_score = compute_speed_score(&vp, &env.block, &info.sender);
+    JUROR_SPEED_SCORES.save(deps.storage, &info.sender, &speed_score)?;
+
     let mut attrs: Vec<Attribute> = vec![
         attr("action", "vote"),
         attr("qualified", has_scores.to_string()),
@@ -195,6 +190,21 @@ fn juror_meets_score_requirements(
     )?)
 }
 
+fn compute_speed_score(vp: &VotingPeriod, block: &BlockInfo, juror: &Addr) -> u8 {
+    // only set a non-zero score if juror response within target time window
+    if block.time < vp.target {
+        let max_duration = vp.target.nanos() - vp.start.nanos();
+        let delta_t = block.time.nanos() - vp.start.nanos();
+        100u8
+            - (Uint128::from(100u128)
+                .multiply_ratio(delta_t, max_duration)
+                .u128()
+                % 100) as u8
+    } else {
+        0
+    }
+}
+
 fn has_verdict(store: &dyn Storage, n_votes: u32) -> Result<bool, ContractError> {
     let n_total_votes: u32 = TOTAL_QUALIFIED_VOTE_COUNT.load(store)?;
 
@@ -202,12 +212,9 @@ fn has_verdict(store: &dyn Storage, n_votes: u32) -> Result<bool, ContractError>
         return Ok(false);
     }
 
-    // Scale the totals for integer arithmetic with percentages
-    let scaled_n = n_votes * u32::MAX;
-    let scaled_n_total = n_total_votes * u32::MAX;
-
     // Do we have the minimum percentage required for consensus?
-    let pct = scaled_n / scaled_n_total;
+    // Scale the totals for integer arithmetic with percentages
+    let pct = (u32::MAX * n_votes) / n_total_votes;
     let min_pct_required = JURY_MIN_CONSENSUS_PCT.load(store)?;
     if pct >= min_pct_required {
         return Ok(true);

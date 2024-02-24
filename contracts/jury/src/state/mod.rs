@@ -10,9 +10,9 @@ use gelotto_jury_lib::{
 use crate::{error::ContractError, execute::Context};
 
 use self::storage::{
-    JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JURY_ALLOW_APPEALS, JURY_MAX_DURATION,
-    JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_TAGS, JURY_TARGET_DURATION, JURY_TASK,
-    JURY_TITLE, JURY_VOTING_STARTS_AT,
+    JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JURY_ALLOW_APPEALS, JURY_HUNG_JURY_TIME,
+    JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_TAGS, JURY_TASK, JURY_TITLE,
+    JURY_VOTING_PERIOD_START, JURY_VOTING_PERIOD_TARGET,
 };
 
 /// Top-level initialization of contract state
@@ -45,13 +45,13 @@ pub fn init(ctx: Context, msg: &JuryInstantiateMsg) -> Result<Response, Contract
         target_duration,
     } = settings;
 
-    JURY_VOTING_STARTS_AT.save(deps.storage, &starts_at)?;
+    JURY_VOTING_PERIOD_START.save(deps.storage, &starts_at)?;
     JURY_ALLOW_APPEALS.save(deps.storage, &allow_appeals)?;
-    JURY_MAX_DURATION.save(deps.storage, &max_duration)?;
-    JURY_TARGET_DURATION.save(deps.storage, &target_duration)?;
+    JURY_HUNG_JURY_TIME.save(deps.storage, &max_duration)?;
+    JURY_VOTING_PERIOD_TARGET.save(deps.storage, &target_duration)?;
     JURY_MIN_CONSENSUS_PCT.save(deps.storage, &min_consensus)?;
     JURY_MIN_VOTE_COUNT.save(deps.storage, &min_vote_count)?;
-    JURY_TARGET_DURATION.save(deps.storage, &target_duration)?;
+    JURY_VOTING_PERIOD_TARGET.save(deps.storage, &target_duration)?;
 
     JUROR_QUALIFICATIONS.save(deps.storage, &jurors.qualifications)?;
     JUROR_BOND_REQUIREMENTS.save(deps.storage, &jurors.bond_requirements)?;

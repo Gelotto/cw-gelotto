@@ -10,3 +10,10 @@ pub struct JurorVoteMetadata {
     pub time: Timestamp,
     pub answer_id: String,
 }
+
+#[cw_serde]
+pub struct VotingPeriod {
+    pub start: Timestamp,
+    pub stop: Timestamp,
+    pub target: Timestamp,
+}
