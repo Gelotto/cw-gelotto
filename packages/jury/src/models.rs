@@ -2,6 +2,8 @@ use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Timestamp};
 use gelotto_core::models::token::TokenAmount;
 
+pub const MAX_SPEED_SCORE: u8 = 100;
+
 pub type ArticleID = u16;
 
 /// This is the payload received by the jury pool when a client requests that a new

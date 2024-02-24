@@ -15,7 +15,10 @@ use cosmwasm_std::{
     attr, to_json_binary, Addr, Attribute, BlockInfo, Empty, QuerierWrapper, Response, Storage,
     Uint128,
 };
-use gelotto_jury_lib::{models::Verdict, query::JurorQueryMsg};
+use gelotto_jury_lib::{
+    models::{Verdict, MAX_SPEED_SCORE},
+    query::JurorQueryMsg,
+};
 
 use super::Context;
 
@@ -193,11 +196,11 @@ fn compute_speed_score(vp: &VotingPeriod, block: &BlockInfo) -> u8 {
     if block.time < vp.target {
         let max_duration = vp.target.nanos() - vp.start.nanos();
         let delta_t = block.time.nanos() - vp.start.nanos();
-        100u8
-            - (Uint128::from(100u128)
+        MAX_SPEED_SCORE
+            - (Uint128::from(MAX_SPEED_SCORE)
                 .multiply_ratio(delta_t, max_duration)
                 .u128()
-                % 100) as u8
+                % (MAX_SPEED_SCORE as u128)) as u8
     } else {
         0
     }
