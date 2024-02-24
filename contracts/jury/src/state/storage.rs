@@ -4,10 +4,15 @@ use gelotto_jury_lib::models::{Article, ArticleID, Bond, JurorQualifications, Ju
 
 use super::models::{JurorVoteMetadata, VotingPeriod};
 
+// Global contract metadata
 pub const CREATED_BY: Item<Addr> = Item::new("created_by");
 pub const TABLE_ADDR: Item<Addr> = Item::new("table_addr");
 pub const ACL_ADDR: Item<Addr> = Item::new("acl_addr");
 
+// Outcome of the jury
+pub const VERDICT: Item<Verdict> = Item::new("verdict");
+
+// State associated with the jury itself:
 pub const JURY_ID: Item<String> = Item::new("id");
 pub const JURY_TITLE: Item<String> = Item::new("title");
 pub const JURY_TASK: Item<JuryTask> = Item::new("task");
@@ -17,6 +22,7 @@ pub const JURY_ALLOW_APPEALS: Item<bool> = Item::new("allow_appeals");
 pub const JURY_MIN_VOTE_COUNT: Item<u32> = Item::new("min_vote_count");
 pub const JURY_MIN_CONSENSUS_PCT: Item<u32> = Item::new("min_consensus_pct");
 
+// State associated with individual jurors:
 pub const JUROR_QUALIFICATIONS: Item<JurorQualifications> = Item::new("juror_qualifications");
 pub const JUROR_BOND_REQUIREMENTS: Item<Vec<Bond>> = Item::new("juror_bond_requirements");
 pub const JUROR_BONDS: Map<(&Addr, &String), bool> = Map::new("juror_bonds");
@@ -33,8 +39,7 @@ pub const JUROR_EVIDENCE_VOTES: Map<(&Addr, ArticleID), i8> = Map::new("juror_ev
 pub const TOTAL_QUALIFIED_VOTE_COUNT: Item<u32> = Item::new("total_qualified_vote_count");
 pub const TOTAL_UNQUALIFIED_VOTE_COUNT: Item<u32> = Item::new("total_unqualified_vote_count");
 
-pub const VERDICT: Item<Verdict> = Item::new("verdict");
-
+// Evidence related state
 pub const EVIDENCE_ARTICLE_ID_COUNTER: Item<ArticleID> = Item::new("article_id_counter");
 pub const EVIDENCE_ARTICLES: Map<ArticleID, Article> = Map::new("articles");
 pub const EVIDENCE_RANKED_ARTICLES: Map<(i16, ArticleID), bool> = Map::new("ranked_articles");
