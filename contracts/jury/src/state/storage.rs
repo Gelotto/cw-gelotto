@@ -1,6 +1,6 @@
 use cosmwasm_std::Addr;
 use cw_storage_plus::{Item, Map};
-use gelotto_jury_lib::models::{Bond, JurorQualifications, JuryTask, Verdict};
+use gelotto_jury_lib::models::{Article, ArticleID, Bond, JurorQualifications, JuryTask, Verdict};
 
 use super::models::{JurorVoteMetadata, VotingPeriod};
 
@@ -26,9 +26,15 @@ pub const JUROR_VOTE_METADATA: Map<&Addr, JurorVoteMetadata> = Map::new("juror_v
 pub const JUROR_VOTE_RATIONALES: Map<&Addr, String> = Map::new("juror_vote_rationales");
 pub const JUROR_VOTE_PROPOSERS: Map<&String, Addr> = Map::new("juror_vote_proposers");
 pub const JUROR_SPEED_SCORES: Map<&Addr, u8> = Map::new("juror_speed_scores");
+pub const JUROR_EVIDENCE_ARTICLE_IDS: Map<(&Addr, ArticleID), bool> = Map::new("juror_articles");
+pub const JUROR_EVIDENCE_VOTES: Map<(&Addr, ArticleID), i8> = Map::new("juror_evidence_votes");
 
 // The sum of these two equal the grand total vote count:
 pub const TOTAL_QUALIFIED_VOTE_COUNT: Item<u32> = Item::new("total_qualified_vote_count");
 pub const TOTAL_UNQUALIFIED_VOTE_COUNT: Item<u32> = Item::new("total_unqualified_vote_count");
 
 pub const VERDICT: Item<Verdict> = Item::new("verdict");
+
+pub const EVIDENCE_ARTICLE_ID_COUNTER: Item<ArticleID> = Item::new("article_id_counter");
+pub const EVIDENCE_ARTICLES: Map<ArticleID, Article> = Map::new("articles");
+pub const EVIDENCE_RANKED_ARTICLES: Map<(i16, ArticleID), bool> = Map::new("ranked_articles");

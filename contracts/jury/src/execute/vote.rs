@@ -26,9 +26,8 @@ pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractEr
     let Context { deps, info, env } = ctx;
     let BlockInfo { time, .. } = env.block;
     let JurorVoteMsg {
-        id: answer_id,
         rationale: maybe_rationale,
-        evidence: _maybe_evidence,
+        answer_id,
     } = msg;
 
     if VERDICT.exists(deps.storage) {

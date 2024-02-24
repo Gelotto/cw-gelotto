@@ -1,5 +1,5 @@
 use cosmwasm_std::StdError;
-use gelotto_jury_lib::models::Bond;
+use gelotto_jury_lib::models::{ArticleID, Bond};
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -9,6 +9,9 @@ pub enum ContractError {
 
     #[error("NotAuthorized: {reason}")]
     NotAuthorized { reason: String },
+
+    #[error("EvidenceNotFound: Article {article_id:?} not found")]
+    EvidenceNotFound { article_id: ArticleID },
 
     #[error("InvalidBond: {bond:?}")]
     InvalidBond { bond: Bond },

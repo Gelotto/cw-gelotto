@@ -1,4 +1,5 @@
 pub mod bond;
+pub mod evidence;
 pub mod lifecycle;
 pub mod set_config;
 pub mod vote;

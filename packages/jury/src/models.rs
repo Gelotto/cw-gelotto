@@ -2,6 +2,8 @@ use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Timestamp};
 use gelotto_core::models::token::TokenAmount;
 
+pub type ArticleID = u16;
+
 /// This is the payload received by the jury pool when a client requests that a new
 /// jury be formed around the given charges (tasks).
 #[cw_serde]
@@ -24,18 +26,18 @@ pub struct JurorConfig {
 #[cw_serde]
 pub struct JurorQualifications {
     /// Total number of juries participated in
-    pub exp: Option<u32>,
-    /// Score for personal identity verification level
-    pub identity: Option<u8>,
-    /// Score for how often juror proposes correct work
-    pub initiative: Option<u8>,
+    pub n_juries: Option<u32>,
+    /// Score for how promptly juror votes within target window
+    pub speed: Option<u8>,
     /// Score for how often juror participates w/o dispute
     pub precision: Option<u8>,
-    /// Score for how promptly juror performs work
-    pub speed: Option<u8>,
-    /// Score for how much juror offers & cites evidentiary material
+    /// Score for personal identity verification level
+    pub identity: Option<u8>,
+    /// Score for how often juror proposes correct answer
+    pub initiative: Option<u8>,
+    /// Score for how much juror cites credible evidence
     pub research: Option<u8>,
-    /// Specific areas of expertise
+    /// Scores for specific named areas of expertise
     pub expertise: Vec<DomainExpertise>,
 }
 
@@ -52,7 +54,7 @@ pub struct JurySettings {
     /// Minimum number of qualified votes for consensus
     pub min_vote_count: u32,
     /// Miniumum majority as percentage in form of u32
-    pub min_consensus: u32,
+    pub min_consensus_pct: u32,
 }
 
 #[cw_serde]
@@ -65,6 +67,22 @@ pub struct JuryTask {
 pub struct Answer {
     pub text: String,
     pub id: String,
+}
+
+#[cw_serde]
+pub enum ArticleValue {
+    Website(String),
+    ImageUrl(String),
+    VideoUrl(String),
+    Article(ArticleID),
+}
+
+#[cw_serde]
+pub struct Article {
+    pub owner: Addr,
+    pub description: String,
+    pub value: ArticleValue,
+    pub rank: i16,
 }
 
 #[cw_serde]

@@ -41,7 +41,7 @@ pub fn init(ctx: Context, msg: &JuryInstantiateMsg) -> Result<Response, Contract
     let JurySettings {
         starts_at,
         allow_appeals,
-        min_consensus,
+        min_consensus_pct: min_consensus,
         min_vote_count,
         max_duration_sec: max_duration,
         target_duration_sec: target_duration,

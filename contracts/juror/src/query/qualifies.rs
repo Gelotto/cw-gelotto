@@ -29,7 +29,7 @@ pub fn query_qualifies(
             .map(|r| r.unwrap())
             .collect(),
     };
-    if let Some(min_exp) = qual.exp {
+    if let Some(min_exp) = qual.n_juries {
         if perf.xp < min_exp {
             return Ok(false);
         }

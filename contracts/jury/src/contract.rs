@@ -3,7 +3,7 @@ use crate::execute::lifecycle::{exec_resume, exec_setup, exec_suspend, exec_tear
 use crate::execute::set_config::exec_set_config;
 use crate::execute::vote::exec_vote;
 use crate::execute::Context;
-use crate::msg::{ExecuteMsg, MigrateMsg, QueryMsg};
+use crate::msg::{EvidenceMsg, ExecuteMsg, MigrateMsg, QueryMsg};
 use crate::query::{query_config, ReadonlyContext};
 use crate::state;
 use cosmwasm_std::{entry_point, to_json_binary};
@@ -38,6 +38,10 @@ pub fn execute(
         ExecuteMsg::SetConfig(config) => exec_set_config(ctx, config),
         ExecuteMsg::Vote(msg) => exec_vote(ctx, msg),
         ExecuteMsg::Follow {} => todo!(),
+        ExecuteMsg::Evidence(msg) => match msg {
+            EvidenceMsg::Add(_) => todo!(),
+            EvidenceMsg::Remove(_) => todo!(),
+        },
         ExecuteMsg::Lifecycle(msg) => match msg {
             LifecycleExecuteMsg::Setup(args) => exec_setup(ctx, args),
             LifecycleExecuteMsg::Teardown(args) => exec_teardown(ctx, args),

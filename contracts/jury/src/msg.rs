@@ -1,29 +1,25 @@
 use cosmwasm_schema::cw_serde;
 use cw_table::lifecycle::LifecycleExecuteMsg;
+use gelotto_jury_lib::models::{ArticleID, ArticleValue};
 
 use crate::state::models::Config;
 
-pub type ArticleID = u16;
-
 #[cw_serde]
-pub enum ArticleValue {
-    Website(String),
-    ImageUrl(String),
-    VideoUrl(String),
-    Article(ArticleID),
-}
-
-#[cw_serde]
-pub struct Article {
+pub struct ArticleMsg {
     pub description: String,
     pub value: ArticleValue,
 }
 
 #[cw_serde]
 pub struct JurorVoteMsg {
-    pub id: String,
+    pub answer_id: String,
     pub rationale: Option<String>,
-    pub evidence: Option<Vec<Article>>,
+}
+
+#[cw_serde]
+pub enum EvidenceMsg {
+    Add(Vec<ArticleMsg>),
+    Remove(Vec<ArticleID>),
 }
 
 #[cw_serde]
@@ -31,6 +27,7 @@ pub enum ExecuteMsg {
     Lifecycle(LifecycleExecuteMsg),
     SetConfig(Config),
     Vote(JurorVoteMsg),
+    Evidence(EvidenceMsg),
     Follow {},
 }
 
