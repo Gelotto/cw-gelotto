@@ -1,4 +1,5 @@
 use crate::error::ContractError;
+use crate::execute::evidence::{exec_add_evidence, exec_remove_evidence, exec_vote_evidence};
 use crate::execute::lifecycle::{exec_resume, exec_setup, exec_suspend, exec_teardown};
 use crate::execute::set_config::exec_set_config;
 use crate::execute::vote::exec_vote;
@@ -39,8 +40,9 @@ pub fn execute(
         ExecuteMsg::Vote(msg) => exec_vote(ctx, msg),
         ExecuteMsg::Follow {} => todo!(),
         ExecuteMsg::Evidence(msg) => match msg {
-            EvidenceMsg::Add(_) => todo!(),
-            EvidenceMsg::Remove(_) => todo!(),
+            EvidenceMsg::Add(articles) => exec_add_evidence(ctx, articles),
+            EvidenceMsg::Remove(article_ids) => exec_remove_evidence(ctx, article_ids),
+            EvidenceMsg::Vote { article_id, vote } => exec_vote_evidence(ctx, article_id, vote),
         },
         ExecuteMsg::Lifecycle(msg) => match msg {
             LifecycleExecuteMsg::Setup(args) => exec_setup(ctx, args),

@@ -20,6 +20,7 @@ pub struct JurorVoteMsg {
 pub enum EvidenceMsg {
     Add(Vec<ArticleMsg>),
     Remove(Vec<ArticleID>),
+    Vote { article_id: ArticleID, vote: i8 },
 }
 
 #[cw_serde]
