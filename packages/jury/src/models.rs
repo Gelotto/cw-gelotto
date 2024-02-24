@@ -1,6 +1,5 @@
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Timestamp};
-use cw_utils::Duration;
 use gelotto_core::models::token::TokenAmount;
 
 /// This is the payload received by the jury pool when a client requests that a new
@@ -45,9 +44,9 @@ pub struct JurySettings {
     /// When voting opens to the jury pool
     pub starts_at: Timestamp,
     /// Ideal timeframe for jury to come to its verdict
-    pub target_duration: Duration,
+    pub target_duration_sec: u32,
     /// Time after which the jury times out AKA hung jury
-    pub max_duration: Duration,
+    pub max_duration_sec: u32,
     /// Can the verdict be appealed or is it final?
     pub allow_appeals: bool,
     /// Minimum number of qualified votes for consensus

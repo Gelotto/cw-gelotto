@@ -1,6 +1,5 @@
-use cosmwasm_std::{Addr, Timestamp};
+use cosmwasm_std::Addr;
 use cw_storage_plus::{Item, Map};
-use cw_utils::Duration;
 use gelotto_jury_lib::models::{Bond, JurorQualifications, JuryTask, Verdict};
 
 use super::models::{JurorVoteMetadata, VotingPeriod};

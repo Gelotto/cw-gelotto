@@ -13,9 +13,8 @@ use crate::{
 };
 use cosmwasm_std::{
     attr, to_json_binary, Addr, Attribute, BlockInfo, Empty, QuerierWrapper, Response, Storage,
-    Timestamp, Uint128,
+    Uint128,
 };
-use cw_utils::Duration;
 use gelotto_jury_lib::{models::Verdict, query::JurorQueryMsg};
 
 use super::Context;
@@ -25,7 +24,7 @@ pub const NOT_QUALIFIED: u8 = 0;
 
 pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractError> {
     let Context { deps, info, env } = ctx;
-    let BlockInfo { time, height, .. } = env.block;
+    let BlockInfo { time, .. } = env.block;
     let JurorVoteMsg {
         id: answer_id,
         rationale: maybe_rationale,
@@ -139,7 +138,7 @@ pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractEr
     }
 
     // Update the juror's "response speed" score
-    let speed_score = compute_speed_score(&vp, &env.block, &info.sender);
+    let speed_score = compute_speed_score(&vp, &env.block);
     JUROR_SPEED_SCORES.save(deps.storage, &info.sender, &speed_score)?;
 
     let mut attrs: Vec<Attribute> = vec![
@@ -190,7 +189,7 @@ fn juror_meets_score_requirements(
     )?)
 }
 
-fn compute_speed_score(vp: &VotingPeriod, block: &BlockInfo, juror: &Addr) -> u8 {
+fn compute_speed_score(vp: &VotingPeriod, block: &BlockInfo) -> u8 {
     // only set a non-zero score if juror response within target time window
     if block.time < vp.target {
         let max_duration = vp.target.nanos() - vp.start.nanos();
