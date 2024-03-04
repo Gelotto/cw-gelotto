@@ -1,5 +1,5 @@
 use cosmwasm_std::StdError;
-use gelotto_jury_lib::models::{ArticleID, Bond};
+use gelotto_jury_lib::{bond::Bond, jury::models::ArticleID};
 use thiserror::Error;
 
 #[derive(Debug, Error)]

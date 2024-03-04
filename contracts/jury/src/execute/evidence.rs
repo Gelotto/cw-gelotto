@@ -1,13 +1,15 @@
 use crate::{
     error::ContractError,
-    msg::ArticleMsg,
     state::storage::{
         EVIDENCE_ARTICLES, EVIDENCE_ARTICLE_ID_COUNTER, EVIDENCE_RANKED_ARTICLES,
         JUROR_EVIDENCE_ARTICLE_IDS, JUROR_EVIDENCE_VOTES,
     },
 };
 use cosmwasm_std::{attr, Response};
-use gelotto_jury_lib::models::{Article, ArticleID};
+use gelotto_jury_lib::jury::{
+    models::{Article, ArticleID},
+    msg::ArticleMsg,
+};
 
 use super::Context;
 

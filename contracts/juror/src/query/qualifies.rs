@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use gelotto_jury_lib::{models::JurorQualifications, query::JurorPerformance};
+use gelotto_jury_lib::juror::{models::JurorQualifications, msg::JurorPerformance};
 
 use crate::{
     error::ContractError,
@@ -14,7 +14,7 @@ use super::ReadonlyContext;
 
 pub fn query_qualifies(
     ctx: ReadonlyContext,
-    qual: JurorQualifications,
+    qualifications: JurorQualifications,
 ) -> Result<bool, ContractError> {
     let ReadonlyContext { deps, .. } = ctx;
     let perf = JurorPerformance {
@@ -29,44 +29,44 @@ pub fn query_qualifies(
             .map(|r| r.unwrap())
             .collect(),
     };
-    if let Some(min_exp) = qual.n_juries {
+    if let Some(min_exp) = qualifications.n_juries {
         if perf.xp < min_exp {
             return Ok(false);
         }
     }
-    if let Some(min_score) = qual.identity {
+    if let Some(min_score) = qualifications.identity {
         if perf.identity < min_score {
             return Ok(false);
         }
     }
-    if let Some(min_score) = qual.speed {
+    if let Some(min_score) = qualifications.speed {
         if perf.speed < min_score {
             return Ok(false);
         }
     }
-    if let Some(min_score) = qual.initiative {
+    if let Some(min_score) = qualifications.initiative {
         if perf.initiative < min_score {
             return Ok(false);
         }
     }
-    if let Some(min_score) = qual.research {
+    if let Some(min_score) = qualifications.research {
         if perf.research < min_score {
             return Ok(false);
         }
     }
-    if let Some(min_score) = qual.precision {
+    if let Some(min_score) = qualifications.precision {
         if perf.precision < min_score {
             return Ok(false);
         }
     }
     // Check domain expertise
-    if !qual.expertise.is_empty() {
+    if !qualifications.expertise.is_empty() {
         let mut expertise_map: HashMap<String, u16> = HashMap::with_capacity(perf.expertise.len());
         for expertise in perf.expertise.iter() {
             let domain = expertise.domain.to_lowercase();
             expertise_map.insert(domain, expertise.score);
         }
-        for required in qual.expertise.iter() {
+        for required in qualifications.expertise.iter() {
             if let Some(score) = expertise_map.get(&required.domain.to_lowercase()) {
                 if *score < required.score {
                     return Ok(false);

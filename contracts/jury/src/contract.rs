@@ -4,14 +4,13 @@ use crate::execute::lifecycle::{exec_resume, exec_setup, exec_suspend, exec_tear
 use crate::execute::set_config::exec_set_config;
 use crate::execute::vote::exec_vote;
 use crate::execute::Context;
-use crate::msg::{EvidenceMsg, ExecuteMsg, MigrateMsg, QueryMsg};
 use crate::query::{query_config, ReadonlyContext};
 use crate::state;
 use cosmwasm_std::{entry_point, to_json_binary};
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response};
 use cw2::set_contract_version;
 use cw_table::lifecycle::LifecycleExecuteMsg;
-use gelotto_jury_lib::msg::JuryInstantiateMsg;
+use gelotto_jury_lib::jury::msg::{EvidenceMsg, ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 
 const CONTRACT_NAME: &str = "crates.io:cw-jury";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -21,7 +20,7 @@ pub fn instantiate(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    msg: JuryInstantiateMsg,
+    msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     Ok(state::init(Context { deps, env, info }, &msg)?)

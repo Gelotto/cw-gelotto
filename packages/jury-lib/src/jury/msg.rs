@@ -1,8 +1,14 @@
 use cosmwasm_schema::cw_serde;
+use cosmwasm_std::Addr;
 use cw_table::lifecycle::LifecycleExecuteMsg;
-use gelotto_jury_lib::models::{ArticleID, ArticleValue};
 
-use crate::state::models::Config;
+use super::models::{ArticleID, ArticleValue, JuryConfig, JuryRequest};
+
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub acl: Addr,
+    pub request: JuryRequest,
+}
 
 #[cw_serde]
 pub struct ArticleMsg {
@@ -26,7 +32,7 @@ pub enum EvidenceMsg {
 #[cw_serde]
 pub enum ExecuteMsg {
     Lifecycle(LifecycleExecuteMsg),
-    SetConfig(Config),
+    SetConfig(JuryConfig),
     Vote(JurorVoteMsg),
     Evidence(EvidenceMsg),
     Follow {},
@@ -41,4 +47,4 @@ pub enum QueryMsg {
 pub struct MigrateMsg {}
 
 #[cw_serde]
-pub struct ConfigResponse(pub Config);
+pub struct ConfigResponse(pub JuryConfig);

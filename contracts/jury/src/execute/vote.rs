@@ -1,14 +1,10 @@
 use crate::{
     error::ContractError,
-    msg::JurorVoteMsg,
-    state::{
-        models::{JurorVoteMetadata, VotingPeriod},
-        storage::{
-            JUROR_BONDS, JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JUROR_SPEED_SCORES,
-            JUROR_VOTES, JUROR_VOTE_METADATA, JUROR_VOTE_PROPOSERS, JUROR_VOTE_RATIONALES,
-            JUROR_VOTE_TOTALS, JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_VOTING_PERIOD,
-            TOTAL_QUALIFIED_VOTE_COUNT, TOTAL_UNQUALIFIED_VOTE_COUNT, VERDICT,
-        },
+    state::storage::{
+        JUROR_BONDS, JUROR_BOND_REQUIREMENTS, JUROR_QUALIFICATIONS, JUROR_SPEED_SCORES,
+        JUROR_VOTES, JUROR_VOTE_METADATA, JUROR_VOTE_PROPOSERS, JUROR_VOTE_RATIONALES,
+        JUROR_VOTE_TOTALS, JURY_MIN_CONSENSUS_PCT, JURY_MIN_VOTE_COUNT, JURY_VOTING_PERIOD,
+        TOTAL_QUALIFIED_VOTE_COUNT, TOTAL_UNQUALIFIED_VOTE_COUNT, VERDICT,
     },
 };
 use cosmwasm_std::{
@@ -16,8 +12,11 @@ use cosmwasm_std::{
     Uint128,
 };
 use gelotto_jury_lib::{
-    models::{Verdict, MAX_SPEED_SCORE},
-    query::JurorQueryMsg,
+    juror::msg::QueryMsg,
+    jury::{
+        models::{JurorVoteMetadata, Verdict, VotingPeriod, MAX_SPEED_SCORE},
+        msg::JurorVoteMsg,
+    },
 };
 
 use super::Context;
@@ -42,7 +41,6 @@ pub fn exec_vote(ctx: Context, msg: JurorVoteMsg) -> Result<Response, ContractEr
     let vp: VotingPeriod = JURY_VOTING_PERIOD.load(deps.storage)?;
 
     // Ensure jury has started
-
     if time < vp.start {
         return Err(ContractError::NotAuthorized {
             reason: "Voting period not started".to_string(),
@@ -187,7 +185,7 @@ fn juror_meets_score_requirements(
 ) -> Result<bool, ContractError> {
     Ok(querier.query_wasm_smart(
         sender,
-        &to_json_binary(&JurorQueryMsg::Qualifies(JUROR_QUALIFICATIONS.load(store)?))?,
+        &to_json_binary(&QueryMsg::Qualifies(JUROR_QUALIFICATIONS.load(store)?))?,
     )?)
 }
 

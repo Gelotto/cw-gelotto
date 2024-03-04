@@ -4,7 +4,7 @@ use crate::{
 };
 use cosmwasm_std::{attr, has_coins, Addr, Attribute, Coin, Response, Uint128};
 use gelotto_core::models::token::{Token, TokenAmount};
-use gelotto_jury_lib::models::Bond;
+use gelotto_jury_lib::bond::Bond;
 
 use super::Context;
 

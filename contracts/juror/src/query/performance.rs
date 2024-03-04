@@ -1,4 +1,4 @@
-use gelotto_jury_lib::query::JurorPerformance;
+use gelotto_jury_lib::juror::msg::JurorPerformance;
 
 use crate::{
     error::ContractError,

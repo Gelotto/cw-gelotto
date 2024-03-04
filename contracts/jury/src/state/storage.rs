@@ -1,8 +1,12 @@
 use cosmwasm_std::Addr;
 use cw_storage_plus::{Item, Map};
-use gelotto_jury_lib::models::{Article, ArticleID, Bond, JurorQualifications, JuryTask, Verdict};
-
-use super::models::{JurorVoteMetadata, VotingPeriod};
+use gelotto_jury_lib::{
+    bond::Bond,
+    juror::models::JurorQualifications,
+    jury::models::{
+        Article, ArticleID, BaseIncentive, JurorVoteMetadata, JuryTask, Verdict, VotingPeriod,
+    },
+};
 
 // Global contract metadata
 pub const CREATED_BY: Item<Addr> = Item::new("created_by");
@@ -21,6 +25,7 @@ pub const JURY_VOTING_PERIOD: Item<VotingPeriod> = Item::new("voting_period");
 pub const JURY_ALLOW_APPEALS: Item<bool> = Item::new("allow_appeals");
 pub const JURY_MIN_VOTE_COUNT: Item<u32> = Item::new("min_vote_count");
 pub const JURY_MIN_CONSENSUS_PCT: Item<u32> = Item::new("min_consensus_pct");
+pub const JURY_BASE_INCENTIVE: Item<BaseIncentive> = Item::new("base_incentive");
 
 // State associated with individual jurors:
 pub const JUROR_QUALIFICATIONS: Item<JurorQualifications> = Item::new("juror_qualifications");
@@ -34,6 +39,7 @@ pub const JUROR_VOTE_PROPOSERS: Map<&String, Addr> = Map::new("juror_vote_propos
 pub const JUROR_SPEED_SCORES: Map<&Addr, u8> = Map::new("juror_speed_scores");
 pub const JUROR_EVIDENCE_ARTICLE_IDS: Map<(&Addr, ArticleID), bool> = Map::new("juror_articles");
 pub const JUROR_EVIDENCE_VOTES: Map<(&Addr, ArticleID), i8> = Map::new("juror_evidence_votes");
+pub const JUROR_HAS_CLAIMED: Map<&Addr, bool> = Map::new("juror_has_claimed");
 
 // The sum of these two equal the grand total vote count:
 pub const TOTAL_QUALIFIED_VOTE_COUNT: Item<u32> = Item::new("total_qualified_vote_count");

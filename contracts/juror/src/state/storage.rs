@@ -1,6 +1,6 @@
 use cosmwasm_std::Addr;
 use cw_storage_plus::{Deque, Item};
-use gelotto_jury_lib::models::DomainExpertise;
+use gelotto_jury_lib::juror::models::DomainExpertise;
 
 pub const CREATED_BY: Item<Addr> = Item::new("created_by");
 pub const TABLE_ADDR: Item<Addr> = Item::new("table_addr");

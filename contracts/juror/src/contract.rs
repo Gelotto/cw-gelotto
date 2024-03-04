@@ -2,7 +2,6 @@ use crate::error::ContractError;
 use crate::execute::lifecycle::{exec_resume, exec_setup, exec_suspend, exec_teardown};
 use crate::execute::set_config::exec_set_config;
 use crate::execute::Context;
-use crate::msg::{ExecuteMsg, MigrateMsg};
 use crate::query::performance::query_performance;
 use crate::query::qualifies::query_qualifies;
 use crate::query::{query_config, ReadonlyContext};
@@ -11,8 +10,7 @@ use cosmwasm_std::{entry_point, to_json_binary};
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response};
 use cw2::set_contract_version;
 use cw_table::lifecycle::LifecycleExecuteMsg;
-use gelotto_jury_lib::msg::JurorInstantiateMsg;
-use gelotto_jury_lib::query::JurorQueryMsg;
+use gelotto_jury_lib::juror::msg::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 
 const CONTRACT_NAME: &str = "crates.io:cw-juror";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -22,7 +20,7 @@ pub fn instantiate(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    msg: JurorInstantiateMsg,
+    msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     Ok(state::init(Context { deps, env, info }, &msg)?)
@@ -48,12 +46,12 @@ pub fn execute(
 }
 
 #[entry_point]
-pub fn query(deps: Deps, env: Env, msg: JurorQueryMsg) -> Result<Binary, ContractError> {
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     let ctx = ReadonlyContext { deps, env };
     let result = match msg {
-        JurorQueryMsg::Config {} => to_json_binary(&query_config(ctx)?),
-        JurorQueryMsg::Performance {} => to_json_binary(&query_performance(ctx)?),
-        JurorQueryMsg::Qualifies(quals) => to_json_binary(&query_qualifies(ctx, quals)?),
+        QueryMsg::Config {} => to_json_binary(&query_config(ctx)?),
+        QueryMsg::Performance {} => to_json_binary(&query_performance(ctx)?),
+        QueryMsg::Qualifies(quals) => to_json_binary(&query_qualifies(ctx, quals)?),
     }?;
     Ok(result)
 }

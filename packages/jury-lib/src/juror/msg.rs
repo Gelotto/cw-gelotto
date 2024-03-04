@@ -1,6 +1,25 @@
 use cosmwasm_schema::cw_serde;
+use cosmwasm_std::Addr;
+use cw_table::lifecycle::LifecycleExecuteMsg;
 
-use crate::models::{DomainExpertise, JurorQualifications};
+use super::models::{DomainExpertise, JurorConfig, JurorQualifications};
+
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub acl: Addr,
+}
+
+#[cw_serde]
+pub enum ExecuteMsg {
+    Lifecycle(LifecycleExecuteMsg),
+    SetConfig(JurorConfig),
+}
+
+#[cw_serde]
+pub struct MigrateMsg {}
+
+#[cw_serde]
+pub struct ConfigResponse(pub JurorConfig);
 
 #[cw_serde]
 pub struct JurorPerformance {
@@ -21,7 +40,7 @@ pub struct JurorPerformance {
 }
 
 #[cw_serde]
-pub enum JurorQueryMsg {
+pub enum QueryMsg {
     Config {},
     Performance {},
     Qualifies(JurorQualifications),

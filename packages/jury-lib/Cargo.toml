@@ -26,3 +26,4 @@ cw-utils        = { workspace = true }
 schemars        = { workspace = true }
 serde           = { workspace = true }
 gelotto-core    = { workspace = true }
+cw-table        = { workspace = true }
